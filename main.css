@@ -1,0 +1,102 @@
+body{
+    background-color: rgb(249, 0, 0);
+}
+h5{
+    margin-top: 0%;
+}
+/* Flexbox container */
+.flex-container {
+    display: flex;
+    margin-top: 8px;
+    height: 335px;
+  }
+  
+  /* Add gap between the grid items */
+  .flex-container > div {
+    margin-right: 10px;
+  }
+  
+  /* Remove right margin for the last item */
+  .flex-container > div:last-child {
+    margin-right: 0;
+  }
+  
+  /* First item (60% width) */
+  .item-1 {
+    flex: 45;
+    background-color: #ffffff;
+    padding: 25px;
+    display: flex;
+    height: 330px;
+  }
+
+  .item-1 div {
+      width: 150px;
+      height: 150px;
+      outline: 12px solid rgb(103, 103, 224);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 15px;
+
+    }
+  
+  /* Second item (20% width) */
+  .item-2 {
+    flex: 22;
+    background-color: #ffffff;
+    padding: 10px;
+    height: 330px;
+  }
+  
+  /* Third item (20% width) */
+  .item-3 {
+    flex: 22;
+    background-color: #ffffff;
+    padding: 12px;
+    height: 330px;
+  }
+  .item-4{
+    flex: 45;
+    background-color: #ffffff;
+    padding: 10px;
+    height: 330px;
+  }
+
+  .image-container {
+    width: 220px; /* Set the width of the container div */
+    height: fit-content; /* Set the height of the container div */
+    border: 2px ;
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .image-container img {
+    width: 40%; 
+    height: auto; 
+    margin: 0;
+  }
+
+  .image-container1 {
+    width: 220px; /* Set the width of the container div */
+    height: fit-content; /* Set the height of the container div */
+    border: 2px ;
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .image-container1 img {
+    width: 60%; 
+    height: auto; 
+    margin: 0;
+    text-align: center;
+  }
+
+  
+  
