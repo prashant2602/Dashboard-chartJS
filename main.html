@@ -3,24 +3,24 @@
 
 <head>
   <title>Dashboard</title>
-  <!-- <script src="https://www.amcharts.com/lib/4/core.js"></script> -->
-  <!-- <script src="https://www.amcharts.com/lib/4/charts.js"></script> -->
   <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="CSS/leaf.css">
+
   <script src="JS/geo.js"></script>
   <script src="JS/amcharts.js"></script>
   <script src="JS/amchartscore.js"></script>
   <script src="JS/jsdelivr.js"></script>
   <script src="JS/leaflet.js"></script>
-  <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-
+  <script src="JS/animated.js"></script>
+  <script src="JS/anychart.js" type="text/javascript"></script>
+  <script src="JS/anycharts-world.js" type="text/javascript"></script>
+  <script src="JS/cdnjs-projects.js" type="text/javascript"></script>
+  <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-data-adapter.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-map.min.js" type="text/javascript"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
-
 <body class="mobview" style="background-color: rgb(209, 209, 209);display:block">
-
   <!-- Flexbox container with the grid items -->
   <div class="flex-container">
     <div class="item item-1">
@@ -69,7 +69,7 @@
     </div>
     <div class="item item-2">
       <h5>SENTIMENT METER</h5>
-      <div id="chartdiv1"></div>
+      <div id="chartdiv1" style="width: 100%;"></div>
     </div>
     <div class="item item-3">
       <h5>NUMBER OF MENTIONS</h5>
@@ -80,41 +80,40 @@
     </div>
   </div>
   <div class="flex-container">
-    <div class="item item-2">
+    <div class="item item-2" style="flex: 24;">
       <h5>NUMBER OF MENTIONS</h5>
-      <div class="row mt-3 mr-4 center">
-        <div class="image-container1 col-5 ">
-          <img src="img\male.png" alt="">
+      <div class="mt-5 ml-5">
+        <div class="row gendertxt mb-2">
+          <div class="image-container1 col-5 ">
+            <img src="img\male.png" alt="">
+          </div>
+          <div class="col-5">
+            <h3>Male</h3>
+            <p class="txt">56%</p>
+          </div>
         </div>
-        <div class="col-5">
-          <h1>Male</h1>
-          <h3>56%</h3>
-        </div>
-      </div>
-      <div class="row ">
-
-        <div class="image-container1 col-5 mt-3">
-          <img src="img\female.png" alt="">
-        </div>
-        <div class="col-5">
-          <h1>Female</h1>
-          <h3>44%</h3>
+        <div class="row gendertxt">
+          <div class="image-container1 col-5 mt-3">
+            <img src="img\female.png" alt="">
+          </div>
+          <div class="col-5">
+            <h3>Female</h3>
+            <p class="txt">44%</p>
+          </div>
         </div>
       </div>
     </div>
-    <div class="item item-3">
+    <div class="item item-3" style="flex: 24;">
       <h5>NUMBER OF MENTIONS</h5>
       <div id="chartdiv"></div>
     </div>
-    <div class="item item-4">
+    <div class="item item-1" style="flex: 48;">
       <h5>GEO DISTRIBUTION</h5>
-      <div id="map"></div>
+      <div id="container"></div>
     </div>
   </div>
 
-  <!-- Add the following HTML canvas element to your page -->
-  <canvas id="donutChart" width="400" height="400"></canvas>
-  
+
   <script>
 
 
@@ -295,21 +294,21 @@
 
     // Add and configure Series
     var pieSeries = chart.series.push(new am4charts.PieSeries());
-pieSeries.dataFields.value = "value";
-pieSeries.dataFields.category = "country";
-pieSeries.labels.template.disabled = true;
-pieSeries.ticks.template.disabled = true;
+    pieSeries.dataFields.value = "value";
+    pieSeries.dataFields.category = "country";
+    pieSeries.labels.template.disabled = true;
+    pieSeries.ticks.template.disabled = true;
 
-chart.legend = new am4charts.Legend();
-chart.legend.position = "right";
+    chart.legend = new am4charts.Legend();
+    chart.legend.position = "right";
 
-chart.innerRadius = am4core.percent(60);
+    chart.innerRadius = am4core.percent(60);
 
-var label = pieSeries.createChild(am4core.Label);
-label.text = "Japan";
-label.horizontalCenter = "middle";
-label.verticalCenter = "middle";
-label.fontSize = 40;
+    var label = pieSeries.createChild(am4core.Label);
+    label.text = "Japan";
+    label.horizontalCenter = "middle";
+    label.verticalCenter = "middle";
+    label.fontSize = 20;
     if (chart.logo) { chart.logo.disabled = true; }
   </script>
 
@@ -362,133 +361,185 @@ label.fontSize = 40;
     });
   </script>
   <script>
-    // Sample data for geo distribution map (latitude and longitude for markers)
-    var data = [
-      { name: 'Location A', lat: 40.7128, lon: -74.0060 },
-      { name: 'Location B', lat: 34.0522, lon: -118.2437 },
-      { name: 'Location C', lat: 41.8781, lon: -87.6298 },
-      // Add more data points as needed
-    ];
-
-    // Function to initialize the map
-    function initMap() {
-      var map = L.map('map').setView([39.8283, -98.5795], 4); // Center the map on the United States (default view)
-
-      // Add a tile layer to the map
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map);
-
-      // Add markers to the map for each data point
-      data.forEach(function (item) {
-        L.marker([item.lat, item.lon]).addTo(map).bindPopup(item.name);
-      });
-    }
-
-    // Call the function to initialize the map
-    initMap();
-
-    // Function to update the map container height in mobile view
-    function updateMapHeight() {
-      var mapContainer = document.getElementById('map');
-      var windowHeight = window.innerHeight;
-      mapContainer.style.height = (windowHeight * 0.4) + 'px'; // Adjust the percentage as needed
-    }
-
-    // Call the function to update the map container height when the window is resized
-    window.addEventListener('resize', updateMapHeight);
-  </script>
-  <script>
     am4core.useTheme(am4themes_animated);
-// Themes end
+    // Themes end
 
-// create chart
-var chart = am4core.create("chartdiv1", am4charts.GaugeChart);
-chart.innerRadius = am4core.percent(80);
+    // create chart
+    var chart = am4core.create("chartdiv1", am4charts.GaugeChart);
+    chart.innerRadius = am4core.percent(80);
 
-// Normal axis
-var axis = chart.xAxes.push(new am4charts.ValueAxis());
-axis.min = 0;
-axis.max = 100;
-axis.strictMinMax = true;
-axis.renderer.grid.template.disabled = true;
+    // Normal axis
+    var axis = chart.xAxes.push(new am4charts.ValueAxis());
+    axis.min = 0;
+    axis.max = 100;
+    axis.strictMinMax = true;
+    axis.renderer.grid.template.disabled = true;
 
-// Axis for ranges
-var colorSet = new am4core.ColorSet();
+    // Axis for ranges
+    var colorSet = new am4core.ColorSet();
 
-var range0 = axis.axisRanges.create();
-range0.value = 0;
-range0.endValue = 50;
-range0.axisFill.fillOpacity = 1;
-range0.axisFill.fill = colorSet.getIndex(15);
-range0.fill=am4core.color("green");
+    var range0 = axis.axisRanges.create();
+    range0.value = 0;
+    range0.endValue = 50;
+    range0.axisFill.fillOpacity = 1;
+    range0.axisFill.fill = colorSet.getIndex(15);
+    range0.fill = am4core.color("green");
 
-var range1 = axis.axisRanges.create();
-range1.value = 50;
-range1.endValue = 100;
-range1.axisFill.fillOpacity = 1;
-range1.fill=am4core.color("red");
-range1.axisFill.fill = colorSet.getIndex(9);
+    var range1 = axis.axisRanges.create();
+    range1.value = 50;
+    range1.endValue = 100;
+    range1.axisFill.fillOpacity = 1;
+    range1.fill = am4core.color("red");
+    range1.axisFill.fill = colorSet.getIndex(9);
 
 
-// Main label
-var label = chart.radarContainer.createChild(am4core.Label);
-label.isMeasured = false;
-label.fontSize = 45;
-label.x = am4core.percent(50);
-label.y = am4core.percent(100);
-label.horizontalCenter = "middle";
-label.verticalCenter = "bottom";
-label.text = "50%";
+    // Main label
+    var label = chart.radarContainer.createChild(am4core.Label);
+    label.isMeasured = false;
+    label.fontSize = 25;
+    label.x = am4core.percent(50);
+    label.y = am4core.percent(100);
+    label.horizontalCenter = "middle";
+    label.verticalCenter = "bottom";
+    label.text = "50%";
 
-// Hand
-var hand = chart.hands.push(new am4charts.ClockHand());
-hand.axis = axis;
-hand.innerRadius = am4core.percent(60);
-hand.startWidth = 5;
-hand.pin.disabled = true;
-hand.value = 50;
+    // Hand
+    var hand = chart.hands.push(new am4charts.ClockHand());
+    hand.axis = axis;
+    hand.innerRadius = am4core.percent(60);
+    hand.startWidth = 5;
+    hand.pin.disabled = true;
+    hand.value = 50;
 
-hand.events.on("propertychanged", function(ev) {
-  range0.endValue = ev.target.value;
-  range1.value = ev.target.value;
-  axis.invalidate();
-});
+    hand.events.on("propertychanged", function (ev) {
+      range0.endValue = ev.target.value;
+      range1.value = ev.target.value;
+      axis.invalidate();
+    });
 
-setInterval(function() {
-  var value = Math.round(Math.random() * 100);
-  label.text = value + "%";
-  var animation = new am4core.Animation(hand, {
-    property: "value",
-    to: value
-  }, 1000, am4core.ease.cubicOut).start();
-}, 2000);
+    setInterval(function () {
+      var value = Math.round(Math.random() * 100);
+      label.text = value + "%";
+      var animation = new am4core.Animation(hand, {
+        property: "value",
+        to: value
+      }, 1000, am4core.ease.cubicOut).start();
+    }, 2000);
 
-// Axis labels
-var label0 = chart.radarContainer.createChild(am4core.Label);
-label0.isMeasured = false;
-label0.y = 10;
-label0.horizontalCenter = "middle";
-label0.verticalCenter = "top";
-label0.text = "Positive";
-label0.fill =am4core.color("green");
+    // Axis labels
+    var label0 = chart.radarContainer.createChild(am4core.Label);
+    label0.isMeasured = false;
+    label0.y = 10;
+    label0.horizontalCenter = "middle";
+    label0.verticalCenter = "top";
+    label0.text = "Positive";
+    label0.fill = am4core.color("green");
 
-label0.adapter.add("x", function(x, target){
-  return -(axis.renderer.pixelInnerRadius + (axis.renderer.pixelRadius - axis.renderer.pixelInnerRadius) / 2);
-});
+    label0.adapter.add("x", function (x, target) {
+      return -(axis.renderer.pixelInnerRadius + (axis.renderer.pixelRadius - axis.renderer.pixelInnerRadius) / 2);
+    });
 
-var label1 = chart.radarContainer.createChild(am4core.Label);
-label1.isMeasured = false;
-label1.y = 10;
-label1.horizontalCenter = "middle";
-label1.verticalCenter = "top";
-label1.text = "Negative";
-label1.fill =am4core.color("red");
+    var label1 = chart.radarContainer.createChild(am4core.Label);
+    label1.isMeasured = false;
+    label1.y = 10;
+    label1.horizontalCenter = "middle";
+    label1.verticalCenter = "top";
+    label1.text = "Negative";
+    label1.fill = am4core.color("red");
 
-label1.adapter.add("x", function(x, target){
-  return (axis.renderer.pixelInnerRadius + (axis.renderer.pixelRadius - axis.renderer.pixelInnerRadius) / 2);
-});
-if (chart.logo) { chart.logo.disabled = true; }
+    label1.adapter.add("x", function (x, target) {
+      return (axis.renderer.pixelInnerRadius + (axis.renderer.pixelRadius - axis.renderer.pixelInnerRadius) / 2);
+    });
+    if (chart.logo) { chart.logo.disabled = true; }
+  </script>
+
+  <script>
+
+    anychart.onDocumentReady(function () {
+
+      // load the data
+      anychart.data.loadJsonFile("https://static.anychart.com/git-storage/word-press/data/choropleth-map-tutorial/data.json", function (data) {
+
+        // Variables
+        // go into the records section of the data
+        var geoData = data.records
+
+        // sum of all cases per country
+        var sumCases = 0;
+
+        // convert cases to numbers
+        var numC;
+
+        // create a new array with the resulting data
+        var data = [];
+
+        // Go through the initial data
+        for (var i = 0; i < geoData.length; i++) {
+          // convert strings to numbers and save them to new variables
+          numC = parseInt(geoData[i].cases);
+
+          // check if we are in the same country by comparing the geoId. 
+          // if the country is the same add the cases to the appropriate variables
+          if ((geoData[i + 1]) != null && (geoData[i].geoId == geoData[i + 1].geoId)) {
+            sumCases = sumCases + numC;
+          }
+          else {
+
+            // add last day cases of the same country
+            sumCases = sumCases + numC;
+
+            // insert the resulting data in the array using the AnyChart keywords 
+            data.push({ id: geoData[i].geoId, value: sumCases, title: geoData[i].countriesAndTerritories })
+
+            // reset the variables to start over
+            sumCases = 0;
+
+          }
+        };
+
+        // connect the data with the map
+        var chart = anychart.map(data);
+        chart.geoData(anychart.maps.world);
+
+        // specify the chart type and set the series 
+        var series = chart.choropleth(data);
+
+        // color scale ranges
+        ocs = anychart.scales.ordinalColor([
+          { less: 99 },
+          { from: 100, to: 999 },
+          { from: 1000, to: 9999 },
+          { from: 10000, to: 29999 },
+          { from: 30000, to: 39000 },
+          { from: 40000, to: 59000 },
+          { from: 60000, to: 99999 },
+          { greater: 100000 }
+        ]);
+
+        // set scale colors
+        ocs.colors(["rgb(252,245,245)", "rgb(241,219,216)", "rgb(229,190,185)", "rgb(211,152,145)", "rgb(192,117,109)", "rgb(178,93,86)", "rgb(152,50,48)", "rgb(150,33,31)"]);
+
+        // tell the series what to use as a colorRange (colorScale)
+        series.colorScale(ocs);
+
+        // set the container id
+        chart.container('container');
+        var credits = chart.credits();
+        credits.enabled(false);
+        // draw the chart
+        chart.legend(true);
+
+        // set the source mode of the legend and add styles
+        chart.legend()
+          .itemsSourceMode("categories")
+          .position('right')
+          .align('top')
+          .itemsLayout('vertical')
+          .padding(20, 20, 20, 20)
+          .paginator(false);
+        chart.draw();
+      });
+    });
   </script>
 </body>
 
